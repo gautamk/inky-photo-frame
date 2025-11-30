@@ -198,8 +198,8 @@ sudo tee -a /etc/samba/smb.conf > /dev/null << EOF
    directory mask = 0755
    valid users = $USER_NAME, pi
    write list = $USER_NAME, pi
-   force user = pi
-   force group = pi
+   force user = $USER_NAME
+   force group = $USER_NAME
 
    # iOS compatibility settings
    vfs objects = fruit streams_xattr
@@ -227,7 +227,7 @@ sudo smbpasswd -e $USER_NAME
 
 # Also set pi user for SMB
 echo -e "$USER_PASSWORD\n$USER_PASSWORD" | sudo smbpasswd -a pi -s
-sudo smbpasswd -e pi
+sudo smbpasswd -e $USER_NAME
 
 # Save credentials to file for display on Inky screen
 print_info "Saving credentials..."
@@ -250,10 +250,10 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
+User=$USER_NAME
 WorkingDirectory=$INSTALL_DIR
-Environment="PATH=/home/pi/.virtualenvs/pimoroni/bin:/usr/bin:/bin"
-ExecStart=/home/pi/.virtualenvs/pimoroni/bin/python $INSTALL_DIR/inky_photo_frame.py
+Environment="PATH=/home/$USER_NAME/.virtualenvs/pimoroni/bin:/usr/bin:/bin"
+ExecStart=/home/$USER_NAME/.virtualenvs/pimoroni/bin/python $INSTALL_DIR/inky_photo_frame.py
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -343,8 +343,8 @@ sudo systemctl stop inky-photo-frame
 
 - Photos: $PHOTOS_DIR
 - Application: $INSTALL_DIR
-- Logs: /home/pi/inky_photo_frame.log
-- History: /home/pi/.inky_history.json
+- Logs: /home/$USER_NAME/inky_photo_frame.log
+- History: /home/$USER_NAME/.inky_history.json
 EOF
 
 # Final status check only if services were started
