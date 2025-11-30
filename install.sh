@@ -19,9 +19,9 @@ USER_NAME="inky"
 # Generate a random 10-character password (alphanumeric only for compatibility)
 USER_PASSWORD=$(< /dev/urandom tr -dc 'A-Za-z0-9' | head -c 10)
 SMB_SHARE_NAME="Images"
-PHOTOS_DIR="/home/pi/Images"
-INSTALL_DIR="/home/pi/inky-photo-frame"
-PASSWORD_FILE="/home/pi/.inky_credentials"
+PHOTOS_DIR="/home/$USER_NAME/Images"
+INSTALL_DIR="/home/$USER_NAME/inky-photo-frame"
+PASSWORD_FILE="/home/$USER_NAME/.inky_credentials"
 
 # Colors for output
 RED='\033[0;31m'
@@ -135,7 +135,7 @@ sudo apt-get install -y python3-pip python3-venv samba samba-common-bin git host
 # STEP 5: Create photos directory
 print_info "STEP 5: Creating photos directory..."
 mkdir -p $PHOTOS_DIR
-sudo chown pi:pi $PHOTOS_DIR
+sudo chown $USER_NAME:$USER_NAME $PHOTOS_DIR
 chmod 755 $PHOTOS_DIR
 
 # STEP 6: Setup Python virtual environment
