@@ -227,7 +227,7 @@ sudo smbpasswd -e $USER_NAME
 
 # Also set pi user for SMB
 echo -e "$USER_PASSWORD\n$USER_PASSWORD" | sudo smbpasswd -a $USER_PASSWORD -s
-sudo smbpasswd -e $USER_NAME
+sudo smbpasswd -e $USER_PASSWORD
 
 # Save credentials to file for display on Inky screen
 print_info "Saving credentials..."
