@@ -57,7 +57,7 @@ except ImportError:
 
 # Configuration
 USER_HOME = Path.home()  # Dynamically get current user's home directory
-logging.info(f'User home directory: {USER_HOME}')
+logging.error(f'User home directory: {USER_HOME}')
 PHOTOS_DIR = USER_HOME / 'Images'
 HISTORY_FILE = USER_HOME / '.inky_history.json'
 COLOR_MODE_FILE = USER_HOME / '.inky_color_mode.json'
