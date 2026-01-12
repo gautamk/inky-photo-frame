@@ -56,11 +56,12 @@ except ImportError:
     BUTTONS_AVAILABLE = False
 
 # Configuration
-PHOTOS_DIR = Path('/home/inky/Images')
-HISTORY_FILE = Path('/home/inky/.inky_history.json')
-COLOR_MODE_FILE = Path('/home/inky/.inky_color_mode.json')
+USER_HOME = Path.home()  # Dynamically get current user's home directory
+PHOTOS_DIR = USER_HOME / 'Images'
+HISTORY_FILE = USER_HOME / '.inky_history.json'
+COLOR_MODE_FILE = USER_HOME / '.inky_color_mode.json'
 CHANGE_HOUR = 5  # Daily change hour (5AM)
-LOG_FILE = '/home/inky/inky_photo_frame.log'
+LOG_FILE = str(USER_HOME / 'inky_photo_frame.log')
 MAX_PHOTOS = 1000  # Maximum number of photos to keep (auto-delete oldest)
 VERSION = "1.1.7"
 
@@ -425,7 +426,7 @@ class InkyPhotoFrame:
     def get_credentials(self):
         """Read username and password from credentials file"""
         try:
-            cred_file = Path("/home/inky/.inky_credentials")
+            cred_file = USER_HOME / '.inky_credentials'
             if cred_file.exists():
                 lines = cred_file.read_text().strip().split('\n')
                 if len(lines) >= 2:

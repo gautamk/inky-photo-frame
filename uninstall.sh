@@ -22,7 +22,7 @@ print_info() {
 
 # Confirmation
 echo -e "${YELLOW}⚠️  Cette action va désinstaller Inky Photo Frame${NC}"
-echo "Les photos dans /home/pi/InkyPhotos seront conservées"
+echo "Les photos dans $HOME/InkyPhotos seront conservées"
 read -p "Voulez-vous continuer? (y/n) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -45,7 +45,7 @@ sudo systemctl restart smbd
 
 # Remove application files
 print_info "Suppression des fichiers de l'application..."
-rm -rf /home/pi/inky-photo-frame
+rm -rf "$HOME/inky-photo-frame"
 
 # Keep photos and history
 print_info "Conservation des photos et de l'historique..."
@@ -65,12 +65,12 @@ echo ""
 read -p "Voulez-vous supprimer les photos? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    rm -rf /home/pi/InkyPhotos
-    rm -f /home/pi/.inky_history.json
-    rm -f /home/pi/inky_photo_frame.log
+    rm -rf "$HOME/InkyPhotos"
+    rm -f "$HOME/.inky_history.json"
+    rm -f "$HOME/inky_photo_frame.log"
     print_status "Photos et historique supprimés"
 else
-    print_info "Photos conservées dans /home/pi/InkyPhotos"
+    print_info "Photos conservées dans $HOME/InkyPhotos"
 fi
 
 echo ""

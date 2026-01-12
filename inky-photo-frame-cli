@@ -4,7 +4,7 @@
 # Provides convenient commands for managing the photo frame
 # Install to: /usr/local/bin/inky-photo-frame
 
-INSTALL_DIR="/home/pi/inky-photo-frame"
+INSTALL_DIR="$HOME/inky-photo-frame"
 SERVICE_NAME="inky-photo-frame"
 
 # Colors
@@ -70,13 +70,13 @@ show_info() {
     fi
 
     # Photo count
-    if [ -d "/home/pi/Images" ]; then
-        PHOTO_COUNT=$(find /home/pi/Images -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.heic" \) 2>/dev/null | wc -l)
+    if [ -d "$HOME/Images" ]; then
+        PHOTO_COUNT=$(find "$HOME/Images" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.heic" \) 2>/dev/null | wc -l)
         echo "Photos: $PHOTO_COUNT"
     fi
 
     # Disk space
-    DISK_USAGE=$(df -h /home/pi | tail -1 | awk '{print $5}')
+    DISK_USAGE=$(df -h "$HOME" | tail -1 | awk '{print $5}')
     echo "Disk Usage: $DISK_USAGE"
 
     # IP Address
