@@ -30,6 +30,7 @@ Change COLOR_MODE setting (line 44) to choose color handling:
 import os
 # Set environment variable to skip GPIO check
 os.environ['INKY_SKIP_GPIO_CHECK'] = '1'
+import argparse
 import json
 import random
 from datetime import datetime, timedelta
@@ -1099,6 +1100,84 @@ class InkyPhotoFrame:
 
         observer.join()
 
-if __name__ == '__main__':
+
+def main():
+    """Main entry point with CLI argument parsing"""
+    parser = argparse.ArgumentParser(
+        description='Inky Photo Frame - Digital photo frame for Inky Impression 7.3"',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python inky_photo_frame.py                    # Run as service (normal mode)
+  python inky_photo_frame.py --show photo.jpg   # Display a specific photo
+  python inky_photo_frame.py --next             # Show next photo in queue
+  python inky_photo_frame.py --prev             # Show previous photo
+  python inky_photo_frame.py --color pimoroni   # Change color mode
+  python inky_photo_frame.py --version          # Show version
+"""
+    )
+    
+    parser.add_argument('--show', '-s', metavar='PATH',
+                        help='Display a specific photo (path to image file)')
+    parser.add_argument('--next', '-n', action='store_true',
+                        help='Display the next photo in the queue')
+    parser.add_argument('--prev', '-p', action='store_true',
+                        help='Display the previous photo')
+    parser.add_argument('--color', '-c', choices=['pimoroni', 'spectra_palette', 'warmth_boost'],
+                        help='Change color mode and redisplay current photo')
+    parser.add_argument('--version', '-v', action='store_true',
+                        help='Show version and exit')
+    
+    args = parser.parse_args()
+    
+    # Handle version request
+    if args.version:
+        print(f'Inky Photo Frame v{VERSION}')
+        sys.exit(0)
+    
+    # Create frame instance
     frame = InkyPhotoFrame()
+    
+    # Handle CLI commands (one-shot mode)
+    if args.show:
+        photo_path = os.path.abspath(args.show)
+        if not os.path.exists(photo_path):
+            print(f'Error: File not found: {photo_path}')
+            sys.exit(1)
+        print(f'Displaying: {photo_path}')
+        success = frame.display_new_photo(photo_path)
+        sys.exit(0 if success else 1)
+    
+    if args.next:
+        print('Showing next photo...')
+        success = frame.next_photo()
+        if success:
+            print(f'Now showing: {Path(frame.history["current"]).name}')
+        else:
+            print('No more photos available')
+        sys.exit(0 if success else 1)
+    
+    if args.prev:
+        print('Showing previous photo...')
+        success = frame.previous_photo()
+        if success:
+            print(f'Now showing: {Path(frame.history["current"]).name}')
+        else:
+            print('No previous photos available')
+        sys.exit(0 if success else 1)
+    
+    if args.color:
+        print(f'Changing color mode to: {args.color}')
+        frame.set_color_mode(args.color)
+        # Redisplay current photo with new color mode
+        if frame.history['current']:
+            frame.display_photo(frame.history['current'])
+            print(f'Redisplayed current photo with {args.color} mode')
+        sys.exit(0)
+    
+    # No CLI args - run as service (normal mode)
     frame.run()
+
+
+if __name__ == '__main__':
+    main()
